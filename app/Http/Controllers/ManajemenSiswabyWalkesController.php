@@ -14,16 +14,20 @@ class ManajemenSiswabyWalkesController extends Controller
     {
         $user = auth()->user();
 
-        // Mengambil siswa dengan role '3' yang berada di kelas walikelas tersebut
+        // 1. Ambil data periode yang sedang aktif terlebih dahulu
+        $periodeAktif = Periode::where('is_active', 1)->first();
+
+        // 2. Pastikan periode aktif ada, lalu filter siswa berdasarkan periode_id tersebut
         $siswas = User::where('role', '3')
             ->where('kelas_id', $user->kelas_id)
+            ->where('periode_id', $periodeAktif->id ?? null) // Filter periode aktif
             ->with(['kelas', 'periode'])
             ->get();
 
-        // PERBAIKAN: Hanya mengambil periode yang statusnya aktif (is_active = 1)
+        // 3. Untuk dikirim ke view (jika masih dibutuhkan untuk dropdown atau info)
         $list_periode = Periode::where('is_active', 1)->get();
 
-        return view('user-walikelas.manajemen-siswa.index', compact('siswas', 'list_periode'));
+        return view('user-walikelas.manajemen-siswa.index', compact('siswas', 'list_periode', 'periodeAktif'));
     }
 
     public function store(Request $request)

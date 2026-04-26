@@ -28,6 +28,22 @@
 
                 <div class="card-body pb-0">
                     <form method="GET" action="{{ route('manajemen-siswa.index') }}" class="row g-2 align-items-end mb-3">
+
+                        {{-- Filter Periode --}}
+                        <div class="col-auto">
+                            <label class="small mb-1 d-block">Filter Periode</label>
+                            <select name="periode_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">— Semua Periode —</option>
+                                @foreach ($list_periode as $p)
+                                    <option value="{{ $p->id }}"
+                                        {{ $periode_aktif_filter == $p->id ? 'selected' : '' }}>
+                                        {{ $p->tahun_ajaran }} {{ $p->is_active ? '(Aktif)' : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Filter Kelas --}}
                         <div class="col-auto">
                             <label class="small mb-1 d-block">Filter Kelas</label>
                             <select name="kelas_id" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -39,7 +55,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        @if ($kelas_aktif)
+
+                        {{-- Tombol Reset --}}
+                        @if ($kelas_aktif || $periode_aktif_filter)
                             <div class="col-auto">
                                 <a href="{{ route('manajemen-siswa.index') }}" class="btn btn-sm btn-outline-secondary">
                                     <i data-feather="x" style="width:14px;height:14px;"></i> Reset
@@ -57,6 +75,7 @@
                                     <th>Foto</th>
                                     <th>Nama Lengkap</th>
                                     <th>Kelas</th>
+                                    <th>Periode</th>
                                     <th>Email/Username</th>
                                     <th>Dibuat Pada</th>
                                     <th>Aksi</th>
@@ -83,6 +102,11 @@
                                                 {{ $s->kelas->nama ?? 'Tanpa Kelas' }}
                                             </span>
                                         </td>
+                                        <td>
+                                            <span class="badge bg-blue-soft text-blue">
+                                                {{ $s->periode->tahun_ajaran ?? '-' }}
+                                            </span>
+                                        </td>
                                         <td>{{ $s->email }}</td>
                                         <td>{{ $s->created_at->translatedFormat('d/m/Y') }}</td>
                                         <td>
@@ -90,7 +114,6 @@
                                                 data-bs-toggle="modal" data-bs-target="#modalEdit{{ $s->id }}">
                                                 <i data-feather="edit"></i>
                                             </button>
-
                                             <form action="{{ route('manajemen-siswa.destroy', $s->id) }}" method="POST"
                                                 id="form-delete-{{ $s->id }}" class="d-inline">
                                                 @csrf @method('DELETE')
@@ -140,6 +163,7 @@
                                                                     <option value="{{ $p->id }}"
                                                                         {{ $s->periode_id == $p->id ? 'selected' : '' }}>
                                                                         {{ $p->tahun_ajaran }}
+                                                                        {{ $p->is_active ? '(Aktif)' : '' }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -179,7 +203,7 @@
                                     </div>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted fst-italic">
+                                        <td colspan="7" class="text-center text-muted fst-italic">
                                             Belum ada data siswa.
                                         </td>
                                     </tr>
@@ -257,7 +281,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof feather !== 'undefined') feather.replace();
 
-            // SweetAlert success
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
@@ -268,7 +291,6 @@
                 });
             @endif
 
-            // SweetAlert error validasi
             @if ($errors->any())
                 Swal.fire({
                     icon: 'error',
@@ -277,15 +299,13 @@
                 });
             @endif
 
-            // Init Simple DataTables (pakai yang sudah ada di layout)
             const tableEl = document.getElementById('tableSiswa');
             if (typeof simpleDatatables !== 'undefined' && tableEl) {
                 new simpleDatatables.DataTable(tableEl, {
                     perPage: 10,
-                    perPageSelect: [10, 25, 50],
+                    perPageSelect: false,
                     labels: {
                         placeholder: 'Cari...',
-                      
                         noRows: 'Data tidak ditemukan',
                         info: 'Menampilkan {start} - {end} dari {rows} data',
                     },
@@ -294,14 +314,13 @@
                             sortable: false
                         }, // Foto
                         {
-                            select: 5,
+                            select: 6,
                             sortable: false
-                        }, // Aksi
+                        }, // Aksi — index bergeser +1 karena ada kolom Periode
                     ],
                 });
             }
 
-            // Konfirmasi hapus — event delegation supaya jalan setelah DataTables render
             document.addEventListener('click', function(e) {
                 const button = e.target.closest('.btn-delete');
                 if (!button) return;

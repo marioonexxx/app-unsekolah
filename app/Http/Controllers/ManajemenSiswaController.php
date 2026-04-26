@@ -15,13 +15,14 @@ class ManajemenSiswaController extends Controller
     {
         $periodeAktif = Periode::where('is_active', 1)->first();
 
-        $data['list_periode'] = Periode::all();
-        $data['list_kelas']   = Kelas::all();
-        $data['kelas_aktif']  = $request->kelas_id;
+        $data['list_periode']       = Periode::all();
+        $data['list_kelas']         = Kelas::all();
+        $data['kelas_aktif']        = $request->kelas_id;
+        $data['periode_aktif_filter'] = $request->periode_id ?? $periodeAktif->id ?? null;
 
-        $query = User::with('kelas')
+        $query = User::with(['kelas', 'periode'])
             ->where('role', '3')
-            ->where('periode_id', $periodeAktif->id ?? 0)
+            ->when($data['periode_aktif_filter'], fn($q) => $q->where('periode_id', $data['periode_aktif_filter']))
             ->when($request->kelas_id, fn($q) => $q->where('kelas_id', $request->kelas_id));
 
         $data['siswas'] = $query->latest()->get();

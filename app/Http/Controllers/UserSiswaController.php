@@ -10,12 +10,20 @@ class UserSiswaController extends Controller
 {
     public function index()
     {
-
+        $user         = auth()->user();
         $periodeAktif = Periode::where('is_active', true)->first();
-        // Hitung total siswa (role 3) dan wali kelas (misal role 2)
-        $totalSiswa = User::where('role', 3)->count();
+
+        // Cek apakah siswa terdaftar di periode aktif
+        if (!$periodeAktif || $user->periode_id !== $periodeAktif->id) {
+            $periodeAktif = null;
+        }
+
+        $totalSiswa = User::where('role', 3)
+            ->where('periode_id', $periodeAktif->id ?? 0)
+            ->count();
+
         $totalWali = User::where('role', 2)->count();
-       
+
         return view('user-siswa.dashboard', compact('periodeAktif', 'totalSiswa', 'totalWali'));
     }
 }

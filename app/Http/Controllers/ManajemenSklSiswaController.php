@@ -9,11 +9,14 @@ class ManajemenSklSiswaController extends Controller
 {
     public function index()
     {
-        // 1. Ambil data periode yang sedang aktif
+        $user = auth()->user();
         $periodeAktif = Periode::where('is_active', true)->first();
 
-        // 2. Kirim variabel $periodeAktif ke view
+        // Cek apakah siswa terdaftar di periode aktif
+        if (!$periodeAktif || $user->periode_id !== $periodeAktif->id) {
+            $periodeAktif = null;
+        }
+
         return view('user-siswa.hasil-ujian.index', compact('periodeAktif'));
-       
     }
 }
