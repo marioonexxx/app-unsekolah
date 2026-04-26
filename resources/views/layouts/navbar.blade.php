@@ -5,9 +5,22 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Dashboard - SB Admin Pro</title>
+
+    <title>@yield('title') | SMA Negeri 1 Ambon</title>
+    <meta name="description" content="@yield('meta_description', 'Sistem Informasi Akademik Resmi SMA Negeri 1 Ambon. Kelola data siswa, manajemen kelas, dan administrasi sekolah dengan mudah.')" />
+    <meta name="keywords" content="SMA Negeri 1 Ambon, Smansa Ambon, Sekolah Ambon, Manajemen Sekolah, SMAN 1 Ambon" />
+    <meta name="author" content="Tim IT SMA Negeri 1 Ambon" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@yield('title') | SMA Negeri 1 Ambon" />
+    <meta property="og:description" content="@yield('meta_description', 'Portal resmi pengelolaan akademik SMA Negeri 1 Ambon.')" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:image" content="{{ asset('assets/img/logo-sman1-ambon.png') }}" />
+
+    <link rel="canonical" href="{{ url()->current() }}" />
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}" />
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="{{ asset('sbadmin/css/styles.css') }}" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />

@@ -38,7 +38,7 @@ class User extends Authenticatable
 
     public function skl()
     {
-        return $this->hasOne(skl::class, 'user_id');
+        return $this->hasOne(Skl::class, 'user_id');
     }
 
     /**
