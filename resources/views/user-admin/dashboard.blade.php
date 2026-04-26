@@ -66,7 +66,7 @@
             {{-- MENU CEPAT --}}
             <div class="row">
                 <div class="col-xl-4 mb-4">
-                    <a href="{{ route('manajemen-kelas.index') }}" class="card lift h-100 text-decoration-none">
+                    <a href="{{ route('manajemen-siswa.index') }}" class="card lift h-100 text-decoration-none">
                         <div class="card-body text-center">
                             <i data-feather="users" class="mb-3"></i>
                             <h5>Setting Akun Siswa</h5>
@@ -96,26 +96,7 @@
                 </div>
             </div>
 
-            {{-- STATUS PERIODE --}}
-            <div class="card mb-4">
-                <div class="card-header">Status Pengumuman Kelulusan</div>
-                <div class="card-body">
-
-                    <p>
-                        <strong>Tahun:</strong> 2025/2026 <br>
-                        <strong>Mulai:</strong> 10 Juni 2026 - 08:00 <br>
-                        <strong>Selesai:</strong> 15 Juni 2026 - 23:59
-                    </p>
-
-                    <span class="badge bg-success">Sedang Dibuka</span>
-                    {{-- opsi lain:
-                <span class="badge bg-warning">Belum Dibuka</span>
-                <span class="badge bg-danger">Sudah Ditutup</span>
-                --}}
-
-                </div>
-            </div>
-
+          
         </div>
     </main>
 @endsection
